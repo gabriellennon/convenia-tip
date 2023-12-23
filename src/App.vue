@@ -1,22 +1,33 @@
-<script setup lang="ts">
+<script  setup lang="ts">
   import SelectButton from 'primevue/selectbutton';
   import InputNumber from 'primevue/inputnumber';
   import Slider from 'primevue/slider';
-  import InputText from 'primevue/inputtext'
 
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
 
   const activeCoin = ref('EUR');
   const optionsCoins = ref(['EUR', 'USD']);
   const inputValueCheck = ref(0);
   const inputValueTip = ref(10);
   const inputValuePeople = ref(2);
+
+  const totalTip = computed(() => {
+    return inputValueCheck.value * (inputValueTip.value / 100);
+  });
+
+  const totalCheck = computed(() => {
+    return inputValueCheck.value + totalTip.value;
+  });
+
+  const valuePerPerson = computed(() => {
+    return totalCheck.value / inputValuePeople.value;
+  });
 </script>
 
 <template>
   <main>
     <h1>Le/Tip</h1>
-    <section class="c-tipp">
+    <section class="c-tip">
       <div class="c-tip_config">
         <SelectButton 
           v-model="activeCoin" 
@@ -36,6 +47,7 @@
             mode="currency" 
             currency="USD" 
             locale="en-US" 
+            class="c-tip_input"
           />
         </div>
         <div class="c-tip_value">
@@ -76,20 +88,20 @@
       </div>
       <div class="c-tip_info">
         <div>
-          <p>Conta</p>
-          <p><span>$</span>14</p>
+          <p>Valor da Conta</p>
+          <p><span>$</span>{{ inputValueCheck.toFixed(2) }}</p>
         </div>
         <div>
-          <p>Gorjeta</p>
-          <p><span>$</span>14</p>
+          <p>Valor da Gorjeta</p>
+          <p><span>$</span>{{ totalTip.toFixed(2) }}</p>
         </div>
         <div>
-          <p>Total</p>
-          <p><span>$</span>14</p>
+          <p>Total da conta</p>
+          <p><span>$</span>{{ totalCheck.toFixed(2) }}</p>
         </div>
         <div>
           <p>Por pessoa</p>
-          <p><span>$</span>14</p>
+          <p><span>$</span>{{ valuePerPerson.toFixed(2) }}</p>
         </div>
         <div>
           <p>Em R$</p>
@@ -99,3 +111,22 @@
     </section>
   </main>
 </template>
+
+<style lang="scss" scoped>
+  h1 {
+    color: $green-500;
+  }
+
+  .c-tip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+
+    & .c-tip_config{
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>

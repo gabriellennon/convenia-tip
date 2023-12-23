@@ -10,6 +10,11 @@ export default defineConfig({
     vue(),
     vueJsx(),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: { additionalData: `@import "src/scss/app.scss";` }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
