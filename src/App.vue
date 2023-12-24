@@ -2,14 +2,11 @@
   import SelectButton from 'primevue/selectbutton';
   import InputNumber from 'primevue/inputnumber';
   import Slider from 'primevue/slider';
+  import gql from 'graphql-tag';
+  import { useQuery } from '@vue/apollo-composable'
+  import type { CurrencyConversion } from '@/utils/types'
 
-  import { ref, computed } from 'vue';
-
-  const activeCoin = ref('EUR');
-  const optionsCoins = ref(['EUR', 'USD']);
-  const inputValueCheck = ref(0);
-  const inputValueTip = ref(10);
-  const inputValuePeople = ref(2);
+  import { ref, computed, onMounted, watchEffect } from 'vue';
 
   const totalTip = computed(() => {
     return inputValueCheck.value * (inputValueTip.value / 100);
@@ -22,90 +19,134 @@
   const valuePerPerson = computed(() => {
     return totalCheck.value / inputValuePeople.value;
   });
+
+  const ALL_CURRENCY_CODES = gql`
+    query GetCurrencyConversion ($baseCurrency: String! $convertCurrencies: [String]!) {
+      currencyConversion (baseCurrency: $baseCurrency convertCurrencies: $convertCurrencies) {
+        baseCurrencyInfo {
+          code
+          symbol
+        }
+        conversions {
+          currencyInfo {
+            code
+            symbol
+          }
+          rate
+          timestamp
+        }
+      }
+    }
+  `;
+
+  const activeCoin = ref('EUR');
+  const optionsCoins = ref(['EUR', 'USD']);
+  const inputValueCheck = ref(0);
+  const inputValueTip = ref(10);
+  const inputValuePeople = ref(2);
+
+  const { result, error, loading } = useQuery(ALL_CURRENCY_CODES,{
+    baseCurrency: activeCoin, 
+    convertCurrencies: [...optionsCoins.value, 'BRL']
+  })
+
+  const currency = computed<CurrencyConversion | null>(() => result.value)
+
+  watchEffect(() => {
+    console.log(currency)
+  })
 </script>
 
 <template>
   <main>
     <h1>Le/Tip</h1>
     <section class="c-tip">
-      <div class="c-tip_config">
-        <SelectButton 
-          v-model="activeCoin" 
-          :options="optionsCoins" 
-          aria-labelledby="basic" 
-        />
-        <div class="c-tip_account_value">
-          <label 
-            for="currency-us" 
-            class="font-bold block mb-2"
-          > 
-            Valor
-          </label>
-          <InputNumber 
-            v-model="inputValueCheck" 
-            inputId="currency-us" 
-            mode="currency" 
-            currency="USD" 
-            locale="en-US" 
-            class="c-tip_input"
+      <div v-if="error">
+        {{ error }}
+      </div>
+      <div v-if="loading">
+        Loading...
+      </div>
+      <div v-else>
+        <div class="c-tip_config">
+          <SelectButton 
+            v-model="activeCoin" 
+            :options="optionsCoins" 
+            aria-labelledby="basic" 
           />
-        </div>
-        <div class="c-tip_value">
-          <div>
-            <p>Gorjeta</p>
+          <div class="c-tip_account_value">
+            <label 
+              for="currency-us" 
+              class="font-bold block mb-2"
+            > 
+              Valor
+            </label>
             <InputNumber 
-              v-model.number="inputValueTip" 
-              class="w-full" 
+              v-model="inputValueCheck" 
+              inputId="currency-us" 
+              mode="currency" 
+              currency="USD" 
+              locale="en-US" 
+              class="c-tip_input"
+            />
+          </div>
+          <div class="c-tip_value">
+            <div>
+              <p>Gorjeta</p>
+              <InputNumber 
+                v-model.number="inputValueTip" 
+                class="w-full" 
+                :min="10"
+                :max="20"
+              />
+              <span>(%)</span>
+            </div>
+            <Slider 
+              v-model="inputValueTip" 
+              class="w-14rem" 
               :min="10"
               :max="20"
             />
-            <span>(%)</span>
           </div>
-          <Slider 
-            v-model="inputValueTip" 
-            class="w-14rem" 
-            :min="10"
-            :max="20"
-          />
-        </div>
-        <div class="c-tip_people">
-          <div>
-            <p>Pessoas</p>
-            <InputNumber 
-              v-model.number="inputValuePeople" 
-              class="w-full" 
-              :min="2"
-              :max="16"
+          <div class="c-tip_people">
+            <div>
+              <p>Pessoas</p>
+              <InputNumber 
+                v-model.number="inputValuePeople" 
+                class="w-full" 
+                :min="2"
+                :max="16"
+              />
+            </div>
+            <Slider 
+              v-model="inputValuePeople" 
+              class="w-14rem" 
+              :min="10"
+              :max="20"
             />
           </div>
-          <Slider 
-            v-model="inputValuePeople" 
-            class="w-14rem" 
-            :min="10"
-            :max="20"
-          />
         </div>
-      </div>
-      <div class="c-tip_info">
-        <div>
-          <p>Valor da Conta</p>
-          <p><span>$</span>{{ inputValueCheck.toFixed(2) }}</p>
-        </div>
-        <div>
-          <p>Valor da Gorjeta</p>
-          <p><span>$</span>{{ totalTip.toFixed(2) }}</p>
-        </div>
-        <div>
-          <p>Total da conta</p>
-          <p><span>$</span>{{ totalCheck.toFixed(2) }}</p>
-        </div>
-        <div>
-          <p>Por pessoa</p>
-          <p><span>$</span>{{ valuePerPerson.toFixed(2) }}</p>
-        </div>
-        <div>
-          <p>Em R$</p>
-          <p><span>R$</span>14</p>
+        <div class="c-tip_info">
+          <div>
+            <p>Valor da Conta</p>
+            <p><span>$</span>{{ inputValueCheck.toFixed(2) }}</p>
+          </div>
+          <div>
+            <p>Valor da Gorjeta</p>
+            <p><span>$</span>{{ totalTip.toFixed(2) }}</p>
+          </div>
+          <div>
+            <p>Total da conta</p>
+            <p><span>$</span>{{ totalCheck.toFixed(2) }}</p>
+          </div>
+          <div>
+            <p>Por pessoa</p>
+            <p><span>$</span>{{ valuePerPerson.toFixed(2) }}</p>
+          </div>
+          <div>
+            <p>Em R$</p>
+            <p><span>R$</span>14</p>
+          </div>
         </div>
       </div>
     </section>
