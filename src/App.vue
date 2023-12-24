@@ -67,7 +67,7 @@
       <div v-if="loading">
         Loading...
       </div>
-      <div v-else>
+      <template v-else>
         <div class="c-tip_config">
           <SelectButton 
             v-model="activeCoin" 
@@ -77,7 +77,7 @@
           <div class="c-tip_account_value">
             <label 
               for="currency-us" 
-              class="font-bold block mb-2"
+              class="c-tip_label"
             > 
               Valor
             </label>
@@ -85,44 +85,35 @@
               v-model="inputValueCheck" 
               inputId="currency-us" 
               mode="currency" 
-              currency="USD" 
+              :currency="activeCoin" 
               locale="en-US" 
-              class="c-tip_input"
             />
           </div>
           <div class="c-tip_value">
-            <div>
-              <p>Gorjeta</p>
-              <InputNumber 
-                v-model.number="inputValueTip" 
-                class="w-full" 
-                :min="10"
-                :max="20"
-              />
-              <span>(%)</span>
+            <div class="c-tip_value__info">
+              <p class="c-tip_label"> 
+                Gorjeta:
+              </p>
+              <p class="c-tip-value_info_slider">{{ inputValueTip }}</p>
+              <span class="c-tip_label">(%)</span>
             </div>
-            <Slider 
+            <Slider
               v-model="inputValueTip" 
-              class="w-14rem" 
               :min="10"
               :max="20"
             />
           </div>
           <div class="c-tip_people">
-            <div>
-              <p>Pessoas</p>
-              <InputNumber 
-                v-model.number="inputValuePeople" 
-                class="w-full" 
-                :min="2"
-                :max="16"
-              />
+            <div class="c-tip_value__info">
+              <p class="c-tip_label"> 
+                Pessoas:
+              </p>
+              <p class="c-tip-value_info_slider">{{ inputValuePeople }}</p>
             </div>
             <Slider 
               v-model="inputValuePeople" 
-              class="w-14rem" 
-              :min="10"
-              :max="20"
+              :min="2"
+              :max="16"
             />
           </div>
         </div>
@@ -148,7 +139,7 @@
             <p><span>R$</span>14</p>
           </div>
         </div>
-      </div>
+      </template>
     </section>
   </main>
 </template>
@@ -162,12 +153,34 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    padding: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #01b252;
+    background: #FBFCFC;
+    border-radius: 0.6rem;
 
     & .c-tip_config{
       display: flex;
       flex-direction: column;
       gap: 1rem;
+
+      & .c-tip_label {
+        color: #50555A;
+        font-weight: 500;
+        font-size: 1rem;
+      }
+
+      & .c-tip_value__info {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-bottom: 0.6rem;
+      }
+
+      & .c-tip-value_info_slider {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #3370aa;
+      }
     }
   }
 </style>
