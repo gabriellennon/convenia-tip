@@ -118,25 +118,25 @@
           </div>
         </div>
         <div class="c-tip_info">
-          <div>
-            <p>Valor da Conta</p>
-            <p><span>$</span>{{ inputValueCheck.toFixed(2) }}</p>
+          <div class="c-tip-info_c_values">
+            <p class="c-tip-info_c_values__text">Valor da Conta</p>
+            <p class="c-tip-info_c_values__value__text"><span>$</span>{{ inputValueCheck.toFixed(2) }}</p>
           </div>
-          <div>
-            <p>Valor da Gorjeta</p>
-            <p><span>$</span>{{ totalTip.toFixed(2) }}</p>
+          <div class="c-tip-info_c_values">
+            <p class="c-tip-info_c_values__text">Valor da Gorjeta</p>
+            <p class="c-tip-info_c_values__value__text"><span>$</span>{{ totalTip.toFixed(2) }}</p>
           </div>
-          <div>
-            <p>Total da conta</p>
-            <p><span>$</span>{{ totalCheck.toFixed(2) }}</p>
+          <div class="c-tip-info_c_values">
+            <p class="c-tip-info_c_values__text">Total da conta</p>
+            <p class="c-tip-info_c_values__value__text"><span>$</span>{{ totalCheck.toFixed(2) }}</p>
           </div>
-          <div>
-            <p>Por pessoa</p>
-            <p><span>$</span>{{ valuePerPerson.toFixed(2) }}</p>
+          <div class="c-tip-info_c_values">
+            <p class="c-tip-info_c_values__text">Por pessoa</p>
+            <p class="c-tip-info_c_values__value__text"><span>$</span>{{ valuePerPerson.toFixed(2) }}</p>
           </div>
-          <div>
-            <p>Em R$</p>
-            <p><span>R$</span>14</p>
+          <div class="c-tip-info_c_values">
+            <p class="c-tip-info_c_values__text">Em R$</p>
+            <p class="c-tip-info_c_values__value__text"><span>R$</span>14</p>
           </div>
         </div>
       </template>
@@ -180,6 +180,25 @@
         font-size: 1rem;
         font-weight: 700;
         color: #3370aa;
+      }
+    }
+
+    & .c-tip_info {
+      text-align: center;
+
+      .c-tip-info_c_values {
+        & .c-tip-info_c_values__text {
+          font-size: 1rem;
+          font-weight: 500;
+          color: #50555A;
+        }
+
+        & .c-tip-info_c_values__value__text {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #01b252;
+          font-style: italic;
+        }
       }
     }
   }
