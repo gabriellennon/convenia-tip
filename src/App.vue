@@ -20,7 +20,6 @@
   const valuePerPerson = computed(() => {
     return totalCheck.value / inputValuePeople.value;
   });
-
   const showConfigContent = ref(true);
 
   const toggleShowConfigContent = () => {
@@ -57,7 +56,18 @@
     convertCurrencies: [...optionsCoins.value, 'BRL']
   })
 
-  const currency = computed<CurrencyConversion | null>(() => result.value)
+  const currency = computed<{currencyConversion: CurrencyConversion} | null>(() => result.value)
+
+  const valueToBRL = computed(() => {
+    const currencyRateBRL = currency.value?.currencyConversion ? currency.value?.currencyConversion.conversions.find(e => e.currencyInfo.code === 'BRL')?.rate : 0
+    return totalCheck.value * (currencyRateBRL ?? 0);
+  });
+
+  const returnActiveSymbol = computed(() => {
+    const symbolActive = activeCoin.value === 'EUR' ? '€' : '$'
+    return symbolActive;
+  });
+
 
   watchEffect(() => {
     // console.log(currency)
@@ -128,23 +138,23 @@
           <div class="c-tip_info" :class="{ visible: !showConfigContent }">
             <div class="c-tip-info_c_values">
               <p class="c-tip-info_c_values__text">Valor da Conta</p>
-              <p class="c-tip-info_c_values__value__text"><span>$</span>{{ inputValueCheck.toFixed(2) }}</p>
+              <p class="c-tip-info_c_values__value__text"><span>{{ returnActiveSymbol }}</span>{{ inputValueCheck.toFixed(2) }}</p>
             </div>
             <div class="c-tip-info_c_values">
               <p class="c-tip-info_c_values__text">Valor da Gorjeta</p>
-              <p class="c-tip-info_c_values__value__text"><span>$</span>{{ totalTip.toFixed(2) }}</p>
+              <p class="c-tip-info_c_values__value__text"><span>{{ returnActiveSymbol }}</span>{{ totalTip.toFixed(2) }}</p>
             </div>
             <div class="c-tip-info_c_values">
               <p class="c-tip-info_c_values__text">Total da conta</p>
-              <p class="c-tip-info_c_values__value__text"><span>$</span>{{ totalCheck.toFixed(2) }}</p>
+              <p class="c-tip-info_c_values__value__text"><span>{{ returnActiveSymbol }}</span>{{ totalCheck.toFixed(2) }}</p>
             </div>
             <div class="c-tip-info_c_values">
               <p class="c-tip-info_c_values__text">Por pessoa</p>
-              <p class="c-tip-info_c_values__value__text"><span>$</span>{{ valuePerPerson.toFixed(2) }}</p>
+              <p class="c-tip-info_c_values__value__text"><span>{{ returnActiveSymbol }}</span>{{ valuePerPerson.toFixed(2) }}</p>
             </div>
             <div class="c-tip-info_c_values">
               <p class="c-tip-info_c_values__text">Em R$</p>
-              <p class="c-tip-info_c_values__value__text"><span>R$</span>14</p>
+              <p class="c-tip-info_c_values__value__text"><span>R$</span>{{ valueToBRL.toFixed(2) }}</p>
             </div>
           </div>
   
