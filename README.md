@@ -1,5 +1,8 @@
 # convenia-tip
 
+<img width="1000" alt="Captura de Tela 2023-12-25 às 11 58 46" src="https://github.com/gabriellennon/convenia-tip/assets/57332512/72215380-9a56-4935-9de8-33c5d8f89a2d">
+
+
 SPA responsivo para divisão de gorjeta em Vue.js. 
 Fluxo da aplicação: O usuário insere o total da conta, o quanto quer dar de gorjeta e quantas pessoas vão dividir a conta. Após isso será gerado o total da conta que pode ser em USD(Dólar) ou EUR(Euro) a depender da escolha do usuário. Como adicional ao final será exibido a conversão para BRL(R$).
 
