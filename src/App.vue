@@ -1,6 +1,7 @@
 <script  setup lang="ts">
   import SelectButton from 'primevue/selectbutton';
   import InputNumber from 'primevue/inputnumber';
+  import Skeleton from 'primevue/skeleton';
   import Slider from 'primevue/slider';
   import Button from 'primevue/button';
   import gql from 'graphql-tag';
@@ -68,6 +69,10 @@
     return symbolActive;
   });
 
+  const reloadWindow = () => {
+    location.reload();
+  }
+
 
   watchEffect(() => {
     // console.log(currency)
@@ -78,11 +83,47 @@
   <main>
     <h1>Le/Tip</h1>
     <section class="c-tip">
-      <div v-if="error">
-        {{ error }}
+      <div v-if="error && !loading">
+        <div class="c-tip_error_request">
+          <h1>Ops! Algo deu errado! 😵‍💫</h1>
+          <Button @click="reloadWindow">
+            Recarregar página
+          </Button>
+          <p>{{ error }}</p>
+        </div>
       </div>
+      
       <div v-if="loading">
-        Loading...
+        <div class="c-tip_c_infos">
+          <div class="c-tip_config">
+            <Skeleton width="8rem" height="3rem"></Skeleton>
+            <Skeleton width="12rem" height="2rem"></Skeleton>
+            <Skeleton width="25rem" height="2rem"></Skeleton>
+            <Skeleton width="25rem" height="2rem"></Skeleton>
+          </div>
+          <div class="c-tip_info">
+            <div class="c-tip-info_c_values_loading">
+              <Skeleton width="10rem" height="2rem"></Skeleton>
+              <Skeleton width="8rem" height="2rem"></Skeleton>
+            </div>
+            <div class="c-tip-info_c_values_loading">
+              <Skeleton width="10rem" height="2rem"></Skeleton>
+              <Skeleton width="8rem" height="2rem"></Skeleton>
+            </div>
+            <div class="c-tip-info_c_values_loading">
+              <Skeleton width="10rem" height="2rem"></Skeleton>
+              <Skeleton width="8rem" height="2rem"></Skeleton>
+            </div>
+            <div class="c-tip-info_c_values_loading">
+              <Skeleton width="10rem" height="2rem"></Skeleton>
+              <Skeleton width="8rem" height="2rem"></Skeleton>
+            </div>
+            <div class="c-tip-info_c_values_loading">
+              <Skeleton width="10rem" height="2rem"></Skeleton>
+              <Skeleton width="8rem" height="2rem"></Skeleton>
+            </div>
+          </div>
+        </div>
       </div>
       <template v-else>
         <div class="c-tip_c_infos">
@@ -179,8 +220,8 @@
 
   .c-tip {
     padding: 1.5rem;
-    border: 1px solid #01b252;
-    background: #FBFCFC;
+    border: 1px solid $green-500;
+    background: $gray-200;
     border-radius: 0.6rem;
 
     .c-tip_c_infos {
@@ -194,7 +235,7 @@
         gap: 1rem;
   
         & .c-tip_label {
-          color: #50555A;
+          color: $black-200;
           font-weight: 500;
           font-size: 1rem;
         }
@@ -209,7 +250,7 @@
         & .c-tip-value_info_slider {
           font-size: 1rem;
           font-weight: 700;
-          color: #3370aa;
+          color: $blue-400;
         }
       }
   
@@ -220,21 +261,36 @@
           & .c-tip-info_c_values__text {
             font-size: 1rem;
             font-weight: 500;
-            color: #50555A;
+            color: $black-200;
           }
   
           & .c-tip-info_c_values__value__text {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #01b252;
+            color: $green-500;
             font-style: italic;
           }
+        }
+
+        & .c-tip-info_c_values_loading {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          align-items: center;
+          margin-bottom: 0.5rem;
         }
       }
   
       & .mobile-button {
         display: none;
       }
+    }
+
+    .c-tip_error_request {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
   }
