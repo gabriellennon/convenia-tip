@@ -1,12 +1,13 @@
 <script  setup lang="ts">
   import SelectButton from 'primevue/selectbutton';
   import InputNumber from 'primevue/inputnumber';
-  import Skeleton from 'primevue/skeleton';
   import Slider from 'primevue/slider';
   import Button from 'primevue/button';
   import gql from 'graphql-tag';
   import { useQuery } from '@vue/apollo-composable'
   import type { CurrencyConversion } from '@/utils/types'
+  import ErrorMessage from '@/components/ErrorMessage.vue'
+  import SkeletonHome from '@/components/SkeletonHome.vue';
 
   import { ref, computed, onMounted, watchEffect } from 'vue';
 
@@ -69,10 +70,6 @@
     return symbolActive;
   });
 
-  const reloadWindow = () => {
-    location.reload();
-  }
-
 
   watchEffect(() => {
     // console.log(currency)
@@ -83,48 +80,12 @@
   <main>
     <h1>Le/Tip</h1>
     <section class="c-tip">
-      <div v-if="error && !loading">
-        <div class="c-tip_error_request">
-          <h1>Ops! Algo deu errado! 😵‍💫</h1>
-          <Button @click="reloadWindow">
-            Recarregar página
-          </Button>
-          <p>{{ error }}</p>
-        </div>
-      </div>
-      
-      <div v-if="loading">
-        <div class="c-tip_c_infos">
-          <div class="c-tip_config">
-            <Skeleton width="8rem" height="3rem"></Skeleton>
-            <Skeleton width="12rem" height="2rem"></Skeleton>
-            <Skeleton width="25rem" height="2rem"></Skeleton>
-            <Skeleton width="25rem" height="2rem"></Skeleton>
-          </div>
-          <div class="c-tip_info">
-            <div class="c-tip-info_c_values_loading">
-              <Skeleton width="10rem" height="2rem"></Skeleton>
-              <Skeleton width="8rem" height="2rem"></Skeleton>
-            </div>
-            <div class="c-tip-info_c_values_loading">
-              <Skeleton width="10rem" height="2rem"></Skeleton>
-              <Skeleton width="8rem" height="2rem"></Skeleton>
-            </div>
-            <div class="c-tip-info_c_values_loading">
-              <Skeleton width="10rem" height="2rem"></Skeleton>
-              <Skeleton width="8rem" height="2rem"></Skeleton>
-            </div>
-            <div class="c-tip-info_c_values_loading">
-              <Skeleton width="10rem" height="2rem"></Skeleton>
-              <Skeleton width="8rem" height="2rem"></Skeleton>
-            </div>
-            <div class="c-tip-info_c_values_loading">
-              <Skeleton width="10rem" height="2rem"></Skeleton>
-              <Skeleton width="8rem" height="2rem"></Skeleton>
-            </div>
-          </div>
-        </div>
-      </div>
+      <template v-if="error && !loading">
+          <ErrorMessage :error="error" />
+      </template>
+      <template v-if="loading">
+        <SkeletonHome />
+      </template>
       <template v-else>
         <div class="c-tip_c_infos">
           <div class="c-tip_config" :class="{ visible: showConfigContent }">
@@ -271,14 +232,6 @@
             font-style: italic;
           }
         }
-
-        & .c-tip-info_c_values_loading {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          align-items: center;
-          margin-bottom: 0.5rem;
-        }
       }
   
       & .mobile-button {
@@ -286,12 +239,7 @@
       }
     }
 
-    .c-tip_error_request {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+    
 
   }
 
