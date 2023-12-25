@@ -8,8 +8,9 @@
   import type { CurrencyConversion } from '@/utils/types'
   import ErrorMessage from '@/components/ErrorMessage.vue'
   import SkeletonHome from '@/components/SkeletonHome.vue';
+  import { ALL_CURRENCY_CODES } from '@/utils/queries/currencyConversionQuery';
 
-  import { ref, computed, onMounted, watchEffect } from 'vue';
+  import { ref, computed } from 'vue';
 
   const totalTip = computed(() => {
     return inputValueCheck.value * (inputValueTip.value / 100);
@@ -27,25 +28,6 @@
   const toggleShowConfigContent = () => {
     showConfigContent.value = !showConfigContent.value;
   };
-
-  const ALL_CURRENCY_CODES = gql`
-    query GetCurrencyConversion ($baseCurrency: String! $convertCurrencies: [String]!) {
-      currencyConversion (baseCurrency: $baseCurrency convertCurrencies: $convertCurrencies) {
-        baseCurrencyInfo {
-          code
-          symbol
-        }
-        conversions {
-          currencyInfo {
-            code
-            symbol
-          }
-          rate
-          timestamp
-        }
-      }
-    }
-  `;
 
   const activeCoin = ref('EUR');
   const optionsCoins = ref(['EUR', 'USD']);
@@ -69,11 +51,6 @@
     const symbolActive = activeCoin.value === 'EUR' ? '€' : '$'
     return symbolActive;
   });
-
-
-  watchEffect(() => {
-    // console.log(currency)
-  })
 </script>
 
 <template>
