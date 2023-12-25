@@ -63,7 +63,7 @@
       <template v-if="loading">
         <SkeletonHome />
       </template>
-      <template v-else>
+      <template v-if="!loading && !error">
         <div class="c-tip_c_infos">
           <div class="c-tip_config" :class="{ visible: showConfigContent }">
             <SelectButton 
