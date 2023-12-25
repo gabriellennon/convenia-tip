@@ -1,40 +1,52 @@
 # convenia-tip
 
-This template should help get you started developing with Vue 3 in Vite.
+SPA responsivo para divisão de gorjeta em Vue.js. 
+Fluxo da aplicação: O usuário insere o total da conta, o quanto quer dar de gorjeta e quantas pessoas vão dividir a conta. Após isso será gerado o total da conta que pode ser em USD(Dólar) ou EUR(Euro) a depender da escolha do usuário. Como adicional ao final será exibido a conversão para BRL(R$).
 
-## Recommended IDE Setup
+## Dependências
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- [Vue.js](https://vuejs.org/).
+- [PrimeVue](https://primevue.org/)
+- [Typescript](https://www.typescriptlang.org/)
+- [GraphQL](https://graphql.org/)
+- [Vue Apollo](https://apollo.vuejs.org/)
+- [Sass](https://sass-lang.com/)
 
-## Type Support for `.vue` Imports in TS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Instalação e utilização
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
+-> WEB
 ```sh
-npm install
-```
+# clone o projeto
+git clone https://github.com/gabriellennon/ignite-timer.git
 
-### Compile and Hot-Reload for Development
+# instale as dependências
+yarn install ou npm install
 
-```sh
+# Rode a aplicação
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
-
+-> API GraphQL de Cotação Monetária
 ```sh
-npm run build
+# clone o projeto
+git clone https://gitlab.com/convenia/assessments/currency-conversion
+
+# instale as dependências
+# -> via docker
+docker build -t <image-name> .
+ou
+# via node.js 16
+npm install
+yarn install
+
+
+
+# Rode a aplicação
+docker run -p <port>:8080 <image-name>
+ou
+yarn serve <port>
 ```
+
+OBS: Para mais informações sobre a api, siga a documentação sugerida
+- [Documentação](https://gitlab.com/convenia/assessments/currency-conversion)
